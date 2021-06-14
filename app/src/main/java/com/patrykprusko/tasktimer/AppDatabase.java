@@ -5,6 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * basic database class for the application,
+ * the only class that should use this is AppProvider
+ */
 class AppDatabase extends SQLiteOpenHelper {
     private static final String TAG = "AppDatabase";
 
@@ -12,7 +16,7 @@ class AppDatabase extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     private static AppDatabase instance = null;
 
-    public AppDatabase(Context context) {
+    private AppDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         Log.d(TAG, "AppDatabase: constructor");
     }
