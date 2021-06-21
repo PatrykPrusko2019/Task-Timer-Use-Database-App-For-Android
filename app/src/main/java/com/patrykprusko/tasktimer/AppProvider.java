@@ -19,7 +19,7 @@ public class AppProvider extends ContentProvider {
     // todo created method -> buildUriMatcher()
     public static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    static final String CONTENT_AUTHORITY = "com.patrykprusko/tasktimer.provider";
+    static final String CONTENT_AUTHORITY = "com.patrykprusko.tasktimer.provider";
     public static final Uri CONTENT_AUTHORITY_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     private static final int TASKS = 100;
@@ -73,6 +73,7 @@ public class AppProvider extends ContentProvider {
             case TASKS:
                 queryBuilder.setTables(TasksContact.TABLE_NAME);
                 break;
+
             case TASKS_ID:
                 queryBuilder.setTables(TasksContact.TABLE_NAME);
                 long taskId = TasksContact.getTaskId(uri);
@@ -103,9 +104,7 @@ public class AppProvider extends ContentProvider {
         }
 
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-
-        return null;
+        return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Nullable
