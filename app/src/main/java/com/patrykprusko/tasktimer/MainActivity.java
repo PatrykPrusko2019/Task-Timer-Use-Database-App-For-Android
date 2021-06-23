@@ -1,7 +1,9 @@
 package com.patrykprusko.tasktimer;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,12 +25,55 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String[] projection = { TasksContact.Columns._ID, TasksContact.Columns.TASKS_NAME, TasksContact.Columns.TASKS_DESCRIPTION, TasksContact.Columns.TASKS_SORTORDER }; //Name, Description
+        String[] projection = { TasksContact.Columns._ID,
+                                TasksContact.Columns.TASKS_NAME,
+                                TasksContact.Columns.TASKS_DESCRIPTION,
+                                TasksContact.Columns.TASKS_SORTORDER }; //Name, Description
+
         ContentResolver contentResolver = getContentResolver();
 
+        ContentValues values = new ContentValues();
 
-//        Cursor cursor = contentResolver.query(TasksContact.CONTENT_URI, // show all records
-        Cursor cursor = contentResolver.query(TasksContact.buildTaskUri(3), //show id 3 record
+        //delete
+//        values.put(TasksContact.Columns.TASKS_SORTORDER, "99");
+//        values.put(TasksContact.Columns.TASKS_DESCRIPTION, "For deletion");
+//        String selection = TasksContact.Columns.TASKS_SORTORDER + " = ?";
+//        String[] args = {"99"};
+
+//        int count = contentResolver.delete(TasksContact.buildTaskUri(3), null, null);
+//        Log.d(TAG, "onCreate: " + count + " record(s) deleted");
+
+        //delete
+        String selection = TasksContact.Columns.TASKS_SORTORDER + " = ?";
+        String[] args = {"13"};
+        int count = contentResolver.delete(TasksContact.CONTENT_URI, selection, args);
+        Log.d(TAG, "onCreate: " + count + " record(s) deleted");
+
+        //update
+//        values.put(TasksContact.Columns.TASKS_SORTORDER, "99");
+//        values.put(TasksContact.Columns.TASKS_DESCRIPTION, "Completed");
+//        String selection = TasksContact.Columns.TASKS_SORTORDER + " = " + 2;
+//        int count = contentResolver.update(TasksContact.CONTENT_URI, values, selection, null);
+//        Log.d(TAG, "onCreate: " + count + " record(s) updated");
+
+        //update
+//        values.put(TasksContact.Columns.TASKS_NAME, "Content provider change name");
+//        values.put(TasksContact.Columns.TASKS_DESCRIPTION, "Record content provider video");
+//        int count = contentResolver.update(TasksContact.CONTENT_URI, values, null, null);
+//        Log.d(TAG, "onCreate: " + count + " record(s) updated");
+
+        //insert
+//        values.put(TasksContact.Columns.TASKS_NAME, "New Task 1");
+//        values.put(TasksContact.Columns.TASKS_DESCRIPTION, "Description 1");
+//        values.put(TasksContact.Columns.TASKS_SORTORDER, 2);
+//        Uri uri = contentResolver.insert(TasksContact.CONTENT_URI, values);
+
+
+
+
+
+        Cursor cursor = contentResolver.query(TasksContact.CONTENT_URI, // show all records
+//        Cursor cursor = contentResolver.query(TasksContact.buildTaskUri(3), //show id 3 record
                 projection,
                 null,
                 null,
