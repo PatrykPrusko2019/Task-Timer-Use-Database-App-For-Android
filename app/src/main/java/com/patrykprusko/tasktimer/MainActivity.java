@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import static com.patrykprusko.tasktimer.R.id.fab;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
