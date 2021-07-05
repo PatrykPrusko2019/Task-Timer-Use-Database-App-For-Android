@@ -1,20 +1,12 @@
 package com.patrykprusko.tasktimer;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import static com.patrykprusko.tasktimer.R.id.fab;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -77,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "taskEditRequest: in two-pane mode (tablet)");
             
         } else {
-            Log.d(TAG, "taskEditRequest: in single-pane moded (phone)");
+            Log.d(TAG, "taskEditRequest: in single-pane model (phone)");
             // in single-pane mode, start the detail activity for the selected item Id
             Intent detailIntent = new Intent(this, AddEditActivity.class);
             if(task != null) { //editing a task

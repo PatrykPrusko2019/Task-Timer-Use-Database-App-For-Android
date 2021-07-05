@@ -77,7 +77,7 @@ public class AppProvider extends ContentProvider {
             case TASKS_ID:
                 queryBuilder.setTables(TasksContact.TABLE_NAME);
                 long taskId = TasksContact.getTaskId(uri);
-                queryBuilder.appendWhere(TasksContact.Columns._ID + " = " + taskId);
+                queryBuilder.appendWhere(TasksContact.Columns._ID + " = " + taskId); // example _id = 13
                 break;
 
 //            case TIMINGS:
