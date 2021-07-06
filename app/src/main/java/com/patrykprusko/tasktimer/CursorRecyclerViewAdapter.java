@@ -82,7 +82,7 @@ class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewA
             notifyDataSetChanged();
         } else {
             //notify the observers about the lack of a data set
-            notifyItemRangeChanged(0, getItemCount());
+            notifyItemRangeRemoved(0, getItemCount());
         }
         return oldCursor;
     }
