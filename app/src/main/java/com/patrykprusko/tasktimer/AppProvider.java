@@ -299,7 +299,7 @@ public class AppProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
         
-        if(count > 0) {
+        if(count >  0) {
             // something was updated
             Log.d(TAG, "update: Setting notifyChange with " + uri);
             getContext().getContentResolver().notifyChange(uri, null);

@@ -7,17 +7,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewAdapter.TaskViewHolder> {
     private static final String TAG = "CursorRecyclerViewAdapt";
     private Cursor cursor;
+    private OnTaskClickListener listener;
 
-    public CursorRecyclerViewAdapter(Cursor cursor) {
+    interface OnTaskClickListener {
+        void onEditClick(Task task);
+        void onDeleteClick(Task task);
+    }
+
+    public CursorRecyclerViewAdapter(Cursor cursor, OnTaskClickListener listener) {
         Log.d(TAG, "CursorRecyclerViewAdapter: Constructor called");
         this.cursor = cursor;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,10 +49,44 @@ class CursorRecyclerViewAdapter extends RecyclerView.Adapter<CursorRecyclerViewA
             if( ! cursor.moveToPosition(position)) {
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
             }
-            holder.name.setText( cursor.getString(cursor.getColumnIndex(TasksContact.Columns.TASKS_NAME)) );
-            holder.description.setText( cursor.getString(cursor.getColumnIndex(TasksContact.Columns.TASKS_DESCRIPTION)) );
+
+            final Task task = new Task(cursor.getLong( cursor.getColumnIndex( TasksContact.Columns._ID) ),
+                                 cursor.getString(cursor.getColumnIndex( TasksContact.Columns.TASKS_NAME)),
+                                 cursor.getString(cursor.getColumnIndex( TasksContact.Columns.TASKS_DESCRIPTION)),
+                                 cursor.getInt(cursor.getColumnIndex( TasksContact.Columns.TASKS_SORTORDER)));
+
+            holder.name.setText( task.getName() );
+            holder.description.setText( task.getDescription() );
             holder.editButton.setVisibility(View.VISIBLE);  // TODO add onCLick listener
             holder.deleteButton.setVisibility(View.VISIBLE); // TODO add onCLick listener
+
+
+            View.OnClickListener  buttonListener = new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: starts");
+                    switch (v.getId()) {
+                        case R.id.tli_edit:
+                            if(listener != null) {
+                                listener.onEditClick(task);
+                            }
+                            break;
+                        case R.id.tli_delete:
+                            if(listener != null) {
+                                listener.onDeleteClick(task);
+                            }
+                            break;
+                        default:
+                            Log.d(TAG, "onClick: found unexpected button id");
+                    }
+                    Log.d(TAG, "onClick: button with id " + v.getId() + " clicked");
+                    Log.d(TAG, "onClick: task name is : " + task.getName());
+                }
+            };
+
+            holder.editButton.setOnClickListener(buttonListener);
+            holder.deleteButton.setOnClickListener(buttonListener);
 
 
         }
