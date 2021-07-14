@@ -41,7 +41,8 @@ public class AddEditActivityFragment extends Fragment {
         sortOrderTextView = (EditText) view.findViewById(R.id.addedit_sortorder);
         saveButton = (Button) view.findViewById(R.id.addedit_save);
 
-        Bundle arguments = getActivity().getIntent().getExtras();
+//        Bundle arguments = getActivity().getIntent().getExtras();
+        Bundle arguments = getArguments();
 
         final Task task;
         if(arguments != null) {
@@ -96,8 +97,8 @@ public class AddEditActivityFragment extends Fragment {
                         if(nameTextView.length() > 0) {
                             Log.d(TAG, "onClick: adding new task");
                             values.put(TasksContact.Columns.TASKS_NAME, nameTextView.getText().toString());
-                            values.put(TasksContact.Columns.TASKS_DESCRIPTION, sortOrderTextView.getText().toString());
-                            values.put(TasksContact.Columns.TASKS_SORTORDER, so);
+                            values.put(TasksContact.Columns.TASKS_DESCRIPTION, descriptionTextView.getText().toString());
+                            values.put(TasksContact.Columns.TASKS_SORTORDER, sortOrderTextView.getText().toString());
                             contentResolver.insert(TasksContact.CONTENT_URI, values);
                         }
                         break;
