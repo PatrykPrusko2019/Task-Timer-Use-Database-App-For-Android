@@ -1,7 +1,9 @@
 package com.patrykprusko.tasktimer;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -24,10 +26,36 @@ public class AddEditActivityFragment extends Fragment {
     private EditText descriptionTextView;
     private EditText sortOrderTextView;
     private Button saveButton;
+    private OnSaveClicked saveListener = null;
+
+    interface OnSaveClicked {
+        void onSaveClicked();
+    }
 
 
     public AddEditActivityFragment() {
         Log.d(TAG, "AddEditActivityFragment: constructor");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        Log.d(TAG, "onAttach: starts");
+        super.onAttach(context);
+
+        // Activities containing this fragment must implement it's callbacks
+        Activity activity = getActivity();
+        if(! (activity instanceof OnSaveClicked) ) {
+            throw new ClassCastException(activity.getClass().getSimpleName()
+                    + " must implement AddEditActivityFragment.OnSaveClicked interface");
+        }
+        saveListener = (OnSaveClicked) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: starts");
+        super.onDetach();
+        saveListener = null;
     }
 
     @Override
@@ -52,6 +80,7 @@ public class AddEditActivityFragment extends Fragment {
             if(task != null) {
                 Log.d(TAG, "onCreateView:  Task details found, editing ...");
                 nameTextView.setText( task.getName() );
+                descriptionTextView.setText(task.getDescription());
                 sortOrderTextView.setText( Integer.toString(task.getSortOrder()) );
                 mode = FragmentEditMode.EDIT;
             } else { //adding a new task
@@ -104,6 +133,10 @@ public class AddEditActivityFragment extends Fragment {
                         break;
                 }
                 Log.d(TAG, "onClick: Done editing");
+
+                if(saveListener != null) {
+                    saveListener.onSaveClicked();
+                }
 
             }
         });

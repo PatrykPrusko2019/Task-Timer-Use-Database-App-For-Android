@@ -2,6 +2,7 @@ package com.patrykprusko.tasktimer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends AppCompatActivity implements CursorRecyclerViewAdapter.OnTaskClickListener {
+public class MainActivity extends AppCompatActivity implements CursorRecyclerViewAdapter.OnTaskClickListener,
+                            AddEditActivityFragment.OnSaveClicked {
 
     private static final String TAG = "MainActivity";
 
@@ -32,9 +34,18 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
             twoPane = true;
         }
 
+    }
 
-
-
+    @Override
+    public void onSaveClicked() {
+        Log.d(TAG, "onSaveClicked: starts");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.task_details_container);
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
     }
 
     @Override
@@ -93,11 +104,14 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
             fragment.setArguments(arguments);
 
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.task_details_container, fragment);
-            fragmentTransaction.commit();
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.task_details_container, fragment);
+//            fragmentTransaction.commit();
 
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.task_details_container, fragment)
+                    .commit();
 
         } else {
             Log.d(TAG, "taskEditRequest: in single-pane model (phone)");
@@ -109,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
             } else { //adding a new task
                 startActivity(detailIntent);
             }
+
+
         }
     }
 
