@@ -65,4 +65,5 @@
         android:text="@string/addedit_save_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addedit_sortorder" />
+
 </android.support.constraint.ConstraintLayout>
