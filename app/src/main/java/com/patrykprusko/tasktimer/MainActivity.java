@@ -13,7 +13,8 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity implements CursorRecyclerViewAdapter.OnTaskClickListener,
-                            AddEditActivityFragment.OnSaveClicked {
+                                                                AddEditActivityFragment.OnSaveClicked,
+                                                                AppDialog.DialogEvents {
 
     private static final String TAG = "MainActivity";
 
@@ -100,10 +101,11 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.deldiag_message, task.getId(), task.getName()));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.deldiag_positive_caption);
 
+        args.putLong("TaskId", task.getId());
+
         dialog.setArguments(args);
         dialog.show(getSupportFragmentManager(), null);
 
-        getContentResolver().delete(TasksContact.buildTaskUri(task.getId()), null, null);
     }
 
     private void taskEditRequest(Task task) {
@@ -141,5 +143,22 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         }
     }
 
+    @Override
+    public void onPositiveDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onPositiveDialogResult: called");
+        long taskId = args.getLong("TaskId");
+        if (BuildConfig.DEBUG && taskId == 0) throw new AssertionError("Task ID is zero");
 
+        getContentResolver().delete(TasksContact.buildTaskUri(taskId), null, null);
+    }
+
+    @Override
+    public void onNegativeDialogResult(int dialogId, Bundle args) {
+        Log.d(TAG, "onNegativeDialogResult: called");
+    }
+
+    @Override
+    public void onDialogCancelled(int dialogId) {
+        Log.d(TAG, "onDialogCancelled: called");
+    }
 }

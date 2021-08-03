@@ -110,7 +110,7 @@ public class AppDialog extends DialogFragment {
 
 
 
-        return super.onCreateDialog(savedInstanceState);
+        return builder.create();
     }
 
     @Override
