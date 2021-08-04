@@ -2,6 +2,7 @@ package com.patrykprusko.tasktimer;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ public class AppDialog extends DialogFragment {
     public static final String DIALOG_MESSAGE = "message";
     public static final String DIALOG_POSITIVE_RID = "positive_rid";
     public static final String DIALOG_NEGATIVE_RID = "negative_rid";
+
+
 
     /*
      The dialogue's callback interface to notify of user selected results (deletion confirmed, etc.)
