@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,8 +20,8 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
     private boolean twoPane = false; //activity in 2-pane mode (tablet or mobile phone)
 
     private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
-    public static final int DELETE_DIALOG_ID = 1;
-    public static final int CANCEL_EDIT_DIALOG_ID = 2;
+    public static final int DIALOG_ID_DELETE = 1;
+    public static final int DIALOG_ID_CANCEL_EDIT = 2;
 
 
     @Override
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
         AppDialog dialog = new AppDialog();
         Bundle args = new Bundle();
-        args.putInt(AppDialog.DIALOG_ID, DELETE_DIALOG_ID);
+        args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_DELETE);
         args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.deldiag_message, task.getId(), task.getName()));
         args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.deldiag_positive_caption);
 
@@ -147,15 +146,31 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
     @Override
     public void onPositiveDialogResult(int dialogId, Bundle args) {
         Log.d(TAG, "onPositiveDialogResult: called");
-        long taskId = args.getLong("TaskId");
-        if (BuildConfig.DEBUG && taskId == 0) throw new AssertionError("Task ID is zero");
+        switch (dialogId) {
+            case DIALOG_ID_DELETE:
+                long taskId = args.getLong("TaskId");
+                if (BuildConfig.DEBUG && taskId == 0) throw new AssertionError("Task ID is zero");
+                getContentResolver().delete(TasksContact.buildTaskUri(taskId), null, null);
+                break;
+            case DIALOG_ID_CANCEL_EDIT:
+                // no action required
+                break;
 
-        getContentResolver().delete(TasksContact.buildTaskUri(taskId), null, null);
+        }
     }
 
     @Override
     public void onNegativeDialogResult(int dialogId, Bundle args) {
         Log.d(TAG, "onNegativeDialogResult: called");
+        switch (dialogId) {
+            case DIALOG_ID_DELETE:
+                // no action required
+                break;
+            case DIALOG_ID_CANCEL_EDIT:
+                finish();
+                break;
+
+        }
     }
 
     @Override
@@ -173,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         } else {
             AppDialog dialog = new AppDialog();
             Bundle args = new Bundle();
-            args.putInt(AppDialog.DIALOG_ID, CANCEL_EDIT_DIALOG_ID);
+            args.putInt(AppDialog.DIALOG_ID, DIALOG_ID_CANCEL_EDIT);
             args.putString(AppDialog.DIALOG_MESSAGE, getString(R.string.cancelEditDiag_message));
             args.putInt(AppDialog.DIALOG_POSITIVE_RID, R.string.cancelEditDiag_positive_caption);
             args.putInt(AppDialog.DIALOG_NEGATIVE_RID, R.string.cancelEditDiag_negative_caption);
