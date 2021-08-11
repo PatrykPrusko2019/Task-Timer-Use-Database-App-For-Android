@@ -1,5 +1,7 @@
 package com.patrykprusko.tasktimer;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity implements CursorRecyclerViewAdapter.OnTaskClickListener,
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
     private static final String ADD_EDIT_FRAGMENT = "AddEditFragment";
     public static final int DIALOG_ID_DELETE = 1;
     public static final int DIALOG_ID_CANCEL_EDIT = 2;
+
+    private AlertDialog dialog = null; // module scope because we need to dismiss it in onStop, e.g. when orientation changes to avoid memory leaks.
 
 
     @Override
@@ -74,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
             case R.id.menumain_settings:
                 break;
             case R.id.menumain_showAbout:
+                showAboutDialog();
                 break;
             case R.id.menumain_generate:
                 break;
@@ -84,6 +91,23 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void showAboutDialog() {
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(messageView);
+
+        dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.mipmap.ic_launcher);
+
+        TextView tv = (TextView) messageView.findViewById(R.id.about_version);
+        tv.setText("v" + BuildConfig.VERSION_NAME);
+
+        dialog.show();
     }
 
     @Override
