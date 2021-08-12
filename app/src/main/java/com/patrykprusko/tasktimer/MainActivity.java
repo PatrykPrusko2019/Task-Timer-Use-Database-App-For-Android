@@ -97,12 +97,12 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
     public void showAboutDialog() {
         View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name);
+        builder.setIcon(R.mipmap.ic_launcher);
         builder.setView(messageView);
 
         dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
-        builder.setTitle(R.string.app_name);
-        builder.setIcon(R.mipmap.ic_launcher);
 
         TextView tv = (TextView) messageView.findViewById(R.id.about_version);
         tv.setText("v" + BuildConfig.VERSION_NAME);
@@ -222,5 +222,13 @@ public class MainActivity extends AppCompatActivity implements CursorRecyclerVie
 
         }
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
     }
 }
